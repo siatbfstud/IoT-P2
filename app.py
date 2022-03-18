@@ -33,7 +33,6 @@ def data():
 
     Temperature = dataTemp
     Humidity = dataHum
-    print(dataTime)
 
     data = [time() * 1000, Temperature, Humidity]
 
@@ -43,22 +42,8 @@ def data():
 
     return response
 
-# =====================================TEST====================================== #
-@app.route("/data2.json")
-def data2():
-    connection = sqlite3.connect("sensor.db")
-    cursor = connection.cursor()
-    cursor.execute("SELECT 1000*timestamp, temp from DHT_data")
-    results = cursor.fetchall()
-    print (results)
-    return json.dumps(results)
-
-@app.route("/graph")
-def graph():
-    return render_template('graph.html')
 
 if __name__ == "__main__":
     app.run(debug=True,
-    threaded=True,
-    host='0.0.0.0'
+    threaded=True
     )

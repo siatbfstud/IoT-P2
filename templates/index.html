@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Flask App </title>
+    <title>Nemlig App</title>
 
     <!-- Bootstraps Java Scipts Links -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -24,6 +24,10 @@
 
     <!--Gauge  -->
     <script type="text/javascript" src="http://pubnub.github.io/eon/lib/eon.js"></script>
+
+    <!--Timezone manager-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.13/moment-timezone-with-data-2012-2022.min.js"></script>
 
 
 </head>
@@ -141,6 +145,11 @@
 
         $(document).ready(function()
         {
+            Highcharts.setOptions({
+                time: {
+                    timezone: 'Europe/Berlin'
+            }
+            });
             // --------------Chart 1 ----------------------------
             chartTemperatue = new Highcharts.Chart({
                 chart:
@@ -157,8 +166,8 @@
                     },
                 xAxis: {
                     type: 'datetime',
-                    tickPixelInterval: 150,
-                    maxZoom: 20 * 1000
+                    /*tickPixelInterval: 150,
+                    maxZoom: 20 * 1000*/
                         },
                 yAxis: {
                     minPadding: 0.2,
@@ -212,52 +221,6 @@
 
 
         });
-    </script>
-
-
-
-<script>
-    class Image{
-
-        constructor(imgUrl, size)
-        {
-            this.imgUrl=imgUrl;
-            this.size=size;
-        }
-
-        backgroundImage()
-        {
-            console.log("inside function ")
-            // Select the Image
-            var img = document.querySelector(".jumbotron");
-
-            // create Css Text
-            var text = "margin:auto;"+
-                "background-image: url("+this.imgUrl+");" +
-                "background-size:cover;"+
-                "opacity:1;"+
-                "background-blend-mode: darken;"+
-                "height: "+ this.size + "vh;";
-
-            img.style.cssText =  text;
-        }
-
-        centerTitle()
-        {
-            /*
-                Center the Title
-             */
-            var t1 = document.querySelector("#title");
-            t1.classList.add("text-white");
-            t1.classList.add("text-center");
-            t1.classList.add("display-3");
-        }
-    }
-    const imgUrl = 'https://media3.giphy.com/media/26tn33aiTi1jkl6H6/giphy.gif'
-    const size = "50";
-    var obj = new Image(imgUrl, size);
-    obj.backgroundImage();
-    obj.centerTitle();
     </script>
 </body>
 
