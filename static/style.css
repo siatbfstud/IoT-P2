@@ -1,0 +1,9 @@
+.jumbotron{
+    widows: 150px;
+    height: 220px;
+    justify-content: center;
+}
+
+.row{
+    justify-content: center;
+}
