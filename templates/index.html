@@ -37,9 +37,10 @@
     <br>
     <br>
   
+    <!-- Gauges -->
     <figure class="highcharts-figure">
         <div id="container-temp" class="chart-container"></div>
-        <div id="container-rpm" class="chart-container"></div>
+        <div id="container-hum" class="chart-container"></div>
         <p class="highcharts-description">
             Chart demonstrating solid gauges with dynamic data. Two separate charts
             are used, and each is updated dynamically every few seconds. Solid
@@ -64,6 +65,7 @@
         </div>
     </div>
 
+    <!-- Chart 1 -->
     <div class="container-fluid">
         <!-- Example row of columns -->
         <div class="row">
@@ -76,6 +78,7 @@
 <br>
 <br>
 
+    <!-- Chart 2 -->
     <div class="container-fluid">
         <!-- Example row of columns -->
         <div class="row">
@@ -126,6 +129,20 @@
 
                 $(".sensor2").text("");
                 $(".sensor2").text("Humidity : " +  Math.round(data2[1]) );
+
+                // gauge Temp
+                var point,
+                    point2
+
+                if (chartTemp) {
+                    point = chartTemp.series[0].points[0];
+                    point.update(Math.round(data1[1]));
+                }
+
+                if (chartHum) {
+                    point2 = chartHum.series[0].points[0];
+                    point2.update(Math.round(data2[1]));
+                }
 
                 // call it again after TEN second
                 setTimeout(requestData, 10000);
@@ -274,7 +291,7 @@
         };
 
         // The speed gauge
-        var chartSpeed = Highcharts.chart('container-temp', Highcharts.merge(gaugeOptions, {
+        var chartTemp = Highcharts.chart('container-temp', Highcharts.merge(gaugeOptions, {
             yAxis: {
                 min: -10,
                 max: 40,
@@ -305,7 +322,7 @@
         }));
 
         // The RPM gauge
-        var chartRpm = Highcharts.chart('container-rpm', Highcharts.merge(gaugeOptions, {
+        var chartHum = Highcharts.chart('container-hum', Highcharts.merge(gaugeOptions, {
             yAxis: {
                 min: 0,
                 max: 5,
@@ -316,7 +333,7 @@
 
             series: [{
                 name: 'RPM',
-                data: [1],
+                data: [null],
                 dataLabels: {
                     format:
                         '<div style="text-align:center">' +
@@ -332,48 +349,6 @@
             }]
 
         }));
-        /*
-        */
-
-        // Data to gauge
-        setInterval(function () {
-            var requests = $.get('/data');
-
-            var notUsed = requests.done(function (result){
-                var data1 = [];
-                data1.push(result[0]);
-                data1.push(result[1]);
-
-                var data2 = [];
-                data2.push(result[0]);
-                data2.push(result[2]);
-            });
-
-            // Temp
-            var point,
-                newVal,
-                inc;
-
-            if (chartSpeed) {
-                point = chartSpeed.series[0].points[0];
-                newVal = point.y + Math.round(data2[1]);
-
-                point.update(newVal);
-            }
-
-            // Hum
-            if (chartRpm) {
-                point = chartRpm.series[0].points[0];
-                inc = Math.random() - 0.5;
-                newVal = point.y + inc;
-
-                if (newVal < 0 || newVal > 5) {
-                    newVal = point.y - inc;
-                }
-
-                point.update(newVal);
-            }
-        }, 10000);
     </script>
 </body>
 
