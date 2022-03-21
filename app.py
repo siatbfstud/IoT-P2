@@ -38,7 +38,7 @@ def data():
 
     response = make_response(json.dumps(data))
 
-    response.content_type = 'application/json'
+    response.content_type = "application/json"
 
     return response
 

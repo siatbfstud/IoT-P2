@@ -32,7 +32,7 @@
 
 <body>
     <div class="jumbotron">
-        <h1 class="text-center text-white">Headline</h1>
+        <h1 class="text-center text-black">Sensor data</h1>
     </div>
     <br>
     <br>
@@ -41,29 +41,15 @@
     <figure class="highcharts-figure">
         <div id="container-temp" class="chart-container"></div>
         <div id="container-hum" class="chart-container"></div>
-        <p class="highcharts-description">
-            Chart demonstrating solid gauges with dynamic data. Two separate charts
-            are used, and each is updated dynamically every few seconds. Solid
-            gauges are popular charts for dashboards, as they visualize a number
-            in a range at a glance. As demonstrated by these charts, the color of
-            the gauge can change depending on the value of the data shown.
+        <p class="highcharts-description text-center">
+            Write some text about the gauges or something idk -.-
         </p>
     </figure>
 
-    <div class="container-fluid">
-
-        <div class="row">
-            <div class="col-5 jumbotron p-2 mx-1">
-                <h1 class="sensor1"> Sensor : </h1>
-            </div>
-            <br>
-
-            <div class="col-5 jumbotron p-2 mx-1">
-                <h1 class="sensor2">Sensor :</h1>
-            </div>
-            <br>
-        </div>
-    </div>
+    <br>
+    <hr class="my-4">
+    <br>
+    <br>
 
     <!-- Chart 1 -->
     <div class="container-fluid">
@@ -95,28 +81,25 @@
 
         function requestData()
         {
-            // Ajax call to get the Data from Flask
+            // Får db data fra Flask
             var requests = $.get('/data');
 
             var tm = requests.done(function (result)
             {
-                // Temperature
+                // Temperature data for chart
                 var seriesTemperature = chartTemperatue.series[0],
                     shiftTemperature = seriesTemperature.data.length > 20;
 
-                // Humidity
+                // Humidity data for chart
                 var seriesHumidity = chartHumidity.series[0],
                     shiftHumidity = seriesHumidity.data.length > 20;
 
-                // Add the Point
-                // Time Temperature\
+                // Chart time and temperature
                 var data1 = [];
                 data1.push(result[0]);
                 data1.push(result[1]);
 
-
-                // Add the Point
-                // Time Humidity
+                // Chart time and humidity
                 var data2 = [];
                 data2.push(result[0]);
                 data2.push(result[2]);
@@ -124,13 +107,9 @@
 
                 chartTemperatue.series[0].addPoint(data1, true, shiftTemperature);
                 chartHumidity.series[0].addPoint(data2, true, shiftHumidity);
-                $(".sensor1").text("");
-                $(".sensor1").text("Temperature : " +  Math.round(data1[1]) );
 
-                $(".sensor2").text("");
-                $(".sensor2").text("Humidity : " +  Math.round(data2[1]) );
 
-                // gauge Temp
+                // Gauge temp and hum
                 var point,
                     point2
 
@@ -144,7 +123,7 @@
                     point2.update(Math.round(data2[1]));
                 }
 
-                // call it again after TEN second
+                // run every x seconds
                 setTimeout(requestData, 10000);
 
             });
@@ -260,13 +239,9 @@
                 enabled: false
             },
 
-            // the value axis
             yAxis: {
-                stops: [
-                    [0.1, '#55BF3B'], // green
-                    [0.5, '#DDDF0D'], // yellow
-                    [0.9, '#DF5353'] // red
-                ],
+                minColor: "#0000ff",
+                maxColor: "#ff0000",
                 lineWidth: 0,
                 tickWidth: 0,
                 minorTickInterval: null,
@@ -293,8 +268,8 @@
         // The speed gauge
         var chartTemp = Highcharts.chart('container-temp', Highcharts.merge(gaugeOptions, {
             yAxis: {
-                min: -10,
-                max: 40,
+                min: 0,
+                max: 30,
                 title: {
                     text: 'Temperature'
                 }
@@ -305,17 +280,17 @@
             },
 
             series: [{
-                name: 'Speed',
+                name: 'temp',
                 data: [null],
                 dataLabels: {
                     format:
                         '<div style="text-align:center">' +
                         '<span style="font-size:25px">{y}</span><br/>' +
-                        '<span style="font-size:12px;opacity:0.4">Celsius</span>' +
+                        '<span style="font-size:12px;opacity:0.4">°C</span>' +
                         '</div>'
                 },
                 tooltip: {
-                    valueSuffix: ' Celsius'
+                    valueSuffix: ' °C'
                 }
             }]
 
@@ -325,19 +300,19 @@
         var chartHum = Highcharts.chart('container-hum', Highcharts.merge(gaugeOptions, {
             yAxis: {
                 min: 0,
-                max: 5,
+                max: 100,
                 title: {
                     text: 'Humidity'
                 }
             },
 
             series: [{
-                name: 'RPM',
+                name: 'hum',
                 data: [null],
                 dataLabels: {
                     format:
                         '<div style="text-align:center">' +
-                        '<span style="font-size:25px">{y:.1f}</span><br/>' +
+                        '<span style="font-size:25px">{y}</span><br/>' +
                         '<span style="font-size:12px;opacity:0.4">' +
                         '%' +
                         '</span>' +
