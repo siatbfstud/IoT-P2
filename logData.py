@@ -1,41 +1,36 @@
 import time
-import board
-import adafruit_dht
 import sqlite3
-
+from w1thermsensor import W1ThermSensor
 from datetime import datetime
 import pytz
 
-dbname="sensor.db"
+dbname="tempDB.db"
 sampleFreq = 10
-dhtDevice = adafruit_dht.DHT11(board.D16)
+sensor = W1ThermSensor()
 
-def getDHTdata():
-    temperature = dhtDevice.temperature
-    humidity = dhtDevice.humidity
+def getTempData():
+    temperature = sensor.get_temperature()
+    temperature = int(temperature)
     current_time_get = datetime.now(pytz.timezone('Europe/Berlin'))
     current_time = current_time_get.strftime("%Y-%m-%d %H:%M:%S")
-    return temperature, humidity, current_time
+    return temperature, current_time
 
-def logData(temperature, humidity, current_time):
+def logData(temperature, current_time):
     conn=sqlite3.connect(dbname)
     curs=conn.cursor()
-    curs.execute("INSERT INTO DHT_data values((?), (?), (?))", (current_time, temperature, humidity))
+    curs.execute("INSERT INTO tempData values((?), (?))", (current_time, temperature))
     conn.commit()
     conn.close()
 
 while True:
     try:
-        temperature, humidity, current_time = getDHTdata()
-        logData(temperature, humidity, current_time)
+        temperature, current_time = getTempData()
+        logData(temperature, current_time)
     
     except RuntimeError as error:
-        # Errors happen fairly often, DHT's are hard to read, just keep going
+        # If error occurs, keep going
         print(error.args[0])
-        time.sleep(2.0)
+        time.sleep(0.5)
         continue
-    except Exception as error:
-        dhtDevice.exit()
-        raise error
     
     time.sleep(sampleFreq)
