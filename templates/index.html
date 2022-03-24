@@ -50,38 +50,38 @@
 
         </div>
     </div>
-            <script type=text/javascript>
-                $(function() {
-                    $('a#02').on('click', function(e) {
-                        e.preventDefault()
-                        $.getJSON('/background_process_test',
-                            function(data) {
-                            //do nothing
-                        });
-                        return false;
-                    });
+    <script type=text/javascript>
+        $(function() {
+            $('a#02').on('click', function(e) {
+                e.preventDefault()
+                $.getJSON('/option1',
+                    function(data) {
+                    //do nothing
                 });
-                $(function() {
-                    $('a#35').on('click', function(e) {
-                        e.preventDefault()
-                        $.getJSON('/background_process_test',
-                            function(data) {
-                            //do nothing
-                        });
-                        return false;
-                    });
+                return false;
+            });
+        });
+        $(function() {
+            $('a#35').on('click', function(e) {
+                e.preventDefault()
+                $.getJSON('/option2',
+                    function(data) {
+                    //do nothing
                 });
-                $(function() {
-                    $('a#68').on('click', function(e) {
-                        e.preventDefault()
-                        $.getJSON('/background_process_test',
-                            function(data) {
-                            //do nothing
-                        });
-                        return false;
-                    });
+                return false;
+            });
+        });
+        $(function() {
+            $('a#68').on('click', function(e) {
+                e.preventDefault()
+                $.getJSON('/option3',
+                    function(data) {
+                    //do nothing
                 });
-            </script>
+                return false;
+            });
+        });
+    </script>
     
 
     <!-- Gauges -->
