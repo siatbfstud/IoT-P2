@@ -37,51 +37,89 @@
     <br>
     <br>
   
+    <!--Dropdown menu-->
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Temperature
+        </button>
+
+        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+            <option></option><a href=# id=02><button class='btn btn-default'>0-2 grader (fisk)</button></a>
+            <option></option><a href=# id=35><button class='btn btn-default'>3-5 grader (mælk)</button></a>
+            <option></option><a href=# id=68><button class='btn btn-default'>6-8 grader (grønt)</button></a></div></div>
+
+        </div>
+    </div>
+    <script type=text/javascript>
+        $(function() {
+            $('a#02').on('click', function(e) {
+                e.preventDefault()
+                $.getJSON('/option1',
+                    function(data) {
+                    //do nothing
+                });
+                return false;
+            });
+        });
+        $(function() {
+            $('a#35').on('click', function(e) {
+                e.preventDefault()
+                $.getJSON('/option2',
+                    function(data) {
+                    //do nothing
+                });
+                return false;
+            });
+        });
+        $(function() {
+            $('a#68').on('click', function(e) {
+                e.preventDefault()
+                $.getJSON('/option3',
+                    function(data) {
+                    //do nothing
+                });
+                return false;
+            });
+        });
+    </script>
+    
+
     <!-- Gauges -->
     <figure class="highcharts-figure">
         <div id="container-temp" class="chart-container"></div>
-        <div id="container-hum" class="chart-container"></div>
-        <p class="highcharts-description text-center">
+        <!-- <p class="highcharts-description text-center">
             Write some text about the gauges or something idk -.-
-        </p>
+        </p> -->
     </figure>
-
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <br>
     <hr class="my-4">
-    <br>
-    <br>
 
     <!-- Chart 1 -->
     <div class="container-fluid">
-        <!-- Example row of columns -->
         <div class="row">
             <div class="container-fluid" id="data-temperature">
-
             </div>
         </div>
     </div>
 <br>
 <br>
 <br>
-
-    <!-- Chart 2 -->
-    <div class="container-fluid">
-        <!-- Example row of columns -->
-        <div class="row">
-            <div class="container-fluid" id="data-humidity">
-
-            </div>
-        </div>
-    </div>
 
 
     <script>
         var chartTemperatue;
-        var chartHumidity;
 
         function requestData()
         {
-            // Får db data fra Flask
+            // DB data from flask
             var requests = $.get('/data');
 
             var tm = requests.done(function (result)
@@ -90,38 +128,22 @@
                 var seriesTemperature = chartTemperatue.series[0],
                     shiftTemperature = seriesTemperature.data.length > 20;
 
-                // Humidity data for chart
-                var seriesHumidity = chartHumidity.series[0],
-                    shiftHumidity = seriesHumidity.data.length > 20;
-
                 // Chart time and temperature
                 var data1 = [];
                 data1.push(result[0]);
                 data1.push(result[1]);
 
-                // Chart time and humidity
-                var data2 = [];
-                data2.push(result[0]);
-                data2.push(result[2]);
-
-
                 chartTemperatue.series[0].addPoint(data1, true, shiftTemperature);
-                chartHumidity.series[0].addPoint(data2, true, shiftHumidity);
 
 
-                // Gauge temp and hum
-                var point,
-                    point2
+                // Gauge temp
+                var point;
 
                 if (chartTemp) {
                     point = chartTemp.series[0].points[0];
                     point.update(Math.round(data1[1]));
                 }
 
-                if (chartHum) {
-                    point2 = chartHum.series[0].points[0];
-                    point2.update(Math.round(data2[1]));
-                }
 
                 // run every x seconds
                 setTimeout(requestData, 10000);
@@ -136,7 +158,7 @@
                     timezone: 'Europe/Berlin'
             }
             });
-            // --------------Chart 1 ----------------------------
+            // -------------- Chart 1 ----------------------------
             chartTemperatue = new Highcharts.Chart({
                 chart:
                     {
@@ -170,45 +192,9 @@
                     data: []
                 }]
             });
-
-            // --------------Chart 2 Starts - -----------------
-            chartHumidity = new Highcharts.Chart({
-                chart:
-                    {
-                        renderTo: 'data-humidity',
-                        defaultSeriesType: 'area',
-                        events: {
-                            load: requestData
-                        }
-                    },
-                title:
-                    {
-                        text: 'Humidity'
-                    },
-                xAxis: {
-                    type: 'datetime',
-                    tickPixelInterval: 150,
-                    maxZoom: 20 * 1000
-                },
-                yAxis: {
-                    minPadding: 0.2,
-                    maxPadding: 0.2,
-                    title: {
-                        text: 'Value',
-                        margin: 80
-                    }
-                },
-                series: [{
-                    lineColor: '#1d82b8',
-                    name: 'Humidity',
-                    data: []
-                }]
-            });
-
-
         });
 
-        /* Gauge Scripts */
+        // Visual gauge options
 
         var gaugeOptions = {
             chart: {
@@ -265,7 +251,7 @@
             }
         };
 
-        // The speed gauge
+        // Temp gauge
         var chartTemp = Highcharts.chart('container-temp', Highcharts.merge(gaugeOptions, {
             yAxis: {
                 min: 0,
@@ -293,36 +279,6 @@
                     valueSuffix: ' °C'
                 }
             }]
-
-        }));
-
-        // The RPM gauge
-        var chartHum = Highcharts.chart('container-hum', Highcharts.merge(gaugeOptions, {
-            yAxis: {
-                min: 0,
-                max: 100,
-                title: {
-                    text: 'Humidity'
-                }
-            },
-
-            series: [{
-                name: 'hum',
-                data: [null],
-                dataLabels: {
-                    format:
-                        '<div style="text-align:center">' +
-                        '<span style="font-size:25px">{y}</span><br/>' +
-                        '<span style="font-size:12px;opacity:0.4">' +
-                        '%' +
-                        '</span>' +
-                        '</div>'
-                },
-                tooltip: {
-                    valueSuffix: ' %'
-                }
-            }]
-
         }));
     </script>
 </body>

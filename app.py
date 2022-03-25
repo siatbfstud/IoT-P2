@@ -7,34 +7,47 @@ from flask import Flask, render_template, make_response
 app = Flask(__name__)
 
 import sqlite3
-conn=sqlite3.connect('sensor.db', check_same_thread=False)
+conn=sqlite3.connect('tempDB.db', check_same_thread=False)
 curs=conn.cursor()
 
 # Retrieve LAST data from database
 def getLastData():
-    for row in curs.execute("SELECT * FROM DHT_data ORDER BY timestamp DESC LIMIT 1"):
+    for row in curs.execute("SELECT * FROM tempData ORDER BY timestamp DESC LIMIT 1"):
         dataTime = str(row[0])
         dataTemp = row[1]
-        dataHum = row[2]
     #conn.close()
-    return dataTime, dataTemp, dataHum
+    return dataTime, dataTemp
 
 @app.route('/', methods=["GET", "POST"])
 def main():
     return render_template('index.html')
 
+@app.route('/option1') # 0-2 grader (fisk)
+def option1():
+    print ("Setting prefered temperature to 0-2 degrees")
+    return ("nothing")
+
+@app.route('/option2') # 3-5 grader (mælk)
+def option2():
+    print ("Setting prefered temperature to 3-5 degrees")   
+    return ("nothing")
+
+@app.route('/option3') # 6-8 grader (grønt)
+def option3():
+    print ("Setting prefered temperature to 6-8 degrees")
+    return ("nothing")
+
+
 
 @app.route('/data', methods=["GET", "POST"])
 def data():
-    # Data Format
-    # [TIME, Temperature, Humidity]
-    dataTime, dataTemp, dataHum = getLastData()
+    dataTime, dataTemp = getLastData()
 
 
     Temperature = dataTemp
-    Humidity = dataHum
+    Time = dataTime
 
-    data = [time() * 1000, Temperature, Humidity]
+    data = [time() * 1000, Temperature]
 
     response = make_response(json.dumps(data))
 
