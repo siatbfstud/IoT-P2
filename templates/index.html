@@ -24,21 +24,16 @@
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
-    <!--Timezone manager-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.13/moment-timezone-with-data-2012-2022.min.js"></script>
-
 </head>
 
 <body>
     <div class="jumbotron">
         <h1 class="text-center text-black">Sensor data</h1>
     </div>
-    <br>
-    <br>
+
   
     <!--Dropdown menu-->
-    <div class="dropdown">
+    <div class="dropdown text-center">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Temperature
         </button>
@@ -50,6 +45,8 @@
 
         </div>
     </div>
+
+    <!-- Scripts for handling the buttons on dropdowns -->
     <script type=text/javascript>
         $(function() {
             $('a#02').on('click', function(e) {
@@ -83,23 +80,12 @@
         });
     </script>
     
-
     <!-- Gauges -->
     <figure class="highcharts-figure">
         <div id="container-temp" class="chart-container"></div>
-        <!-- <p class="highcharts-description text-center">
-            Write some text about the gauges or something idk -.-
-        </p> -->
+        <p class="highcharts-description text-center" id="lastUpdate">Test</p>
     </figure>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+
     <hr class="my-4">
 
     <!-- Chart 1 -->
@@ -109,13 +95,9 @@
             </div>
         </div>
     </div>
-<br>
-<br>
-<br>
-
 
     <script>
-        var chartTemperatue;
+        var chartTemperature;
 
         function requestData()
         {
@@ -125,16 +107,15 @@
             var tm = requests.done(function (result)
             {
                 // Temperature data for chart
-                var seriesTemperature = chartTemperatue.series[0],
-                    shiftTemperature = seriesTemperature.data.length > 20;
+                var shiftTemperature = chartTemperature.series[0].data.length > 20;
 
                 // Chart time and temperature
                 var data1 = [];
                 data1.push(result[0]);
                 data1.push(result[1]);
 
-                chartTemperatue.series[0].addPoint(data1, true, shiftTemperature);
-
+                chartTemperature.series[0].addPoint(data1, true, shiftTemperature);
+                document.getElementById("lastUpdate").innerHTML = "Last sensor reading was at: " + data1[0]
 
                 // Gauge temp
                 var point;
@@ -159,7 +140,7 @@
             }
             });
             // -------------- Chart 1 ----------------------------
-            chartTemperatue = new Highcharts.Chart({
+            chartTemperature = new Highcharts.Chart({
                 chart:
                     {
                     renderTo: 'data-temperature',
@@ -170,19 +151,17 @@
                     },
                 title:
                     {
-                    text: 'Temperature'
+                    text: 'Graph of box readings'
                     },
                 xAxis: {
-                    type: 'datetime',
-                    tickPixelInterval: 150,
-                    maxZoom: 20 * 1000
+                    type: 'category'
                         },
                 yAxis: {
                     minPadding: 0.2,
                     maxPadding: 0.2,
                     title: {
-                        text: 'Value',
-                        margin: 80
+                        text: 'Celsius',
+                        margin: 20
                             }
                          },
                 series: [{

@@ -95,9 +95,8 @@ def data():
     dataTime, dataTemp = getLastData()
 
     var.Temperature = dataTemp
-    Time = dataTime
-
-    data = [Time, var.Temperature]
+    
+    data = [dataTime, dataTemp]
 
     response = make_response(json.dumps(data))
 
