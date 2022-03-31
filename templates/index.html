@@ -7,7 +7,7 @@
     <!-- CSS -->
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
 
-    <!-- Bootstraps Java Scipts Links -->
+    <!-- Bootstraps -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -23,26 +23,25 @@
     <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-
 </head>
 
 <body>
+    <!-- Øverst HTML element -->
     <div class="jumbotron">
-        <h1 class="text-center text-black">Sensor data</h1>
+        <h1 class="text-center text-black">Site for choosing your food's temperature</h1>
     </div>
 
   
     <!--Dropdown menu-->
     <div class="dropdown text-center">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Temperature
+            Choose Temperature
         </button>
 
         <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-            <option></option><a href=# id=02><button class='btn btn-default'>0-2 grader (fisk)</button></a>
-            <option></option><a href=# id=35><button class='btn btn-default'>3-5 grader (mælk)</button></a>
-            <option></option><a href=# id=68><button class='btn btn-default'>6-8 grader (grønt)</button></a></div></div>
-
+            <option></option><a href=# id=02><button class='btn btn-default'>0 - 2 degree Celsius (Fish)</button></a>
+            <option></option><a href=# id=35><button class='btn btn-default'>3 - 5 degree Celsius (Milk)</button></a>
+            <option></option><a href=# id=68><button class='btn btn-default'>6 - 8 degree Celsius (Greens)</button></a>
         </div>
     </div>
 
@@ -53,7 +52,6 @@
                 e.preventDefault()
                 $.getJSON('/option1',
                     function(data) {
-                    //do nothing
                 });
                 return false;
             });
@@ -63,7 +61,6 @@
                 e.preventDefault()
                 $.getJSON('/option2',
                     function(data) {
-                    //do nothing
                 });
                 return false;
             });
@@ -73,7 +70,6 @@
                 e.preventDefault()
                 $.getJSON('/option3',
                     function(data) {
-                    //do nothing
                 });
                 return false;
             });
@@ -88,7 +84,7 @@
 
     <hr class="my-4">
 
-    <!-- Chart 1 -->
+    <!-- Chart -->
     <div class="container-fluid">
         <div class="row">
             <div class="container-fluid" id="data-temperature">
@@ -101,7 +97,7 @@
 
         function requestData()
         {
-            // DB data from flask
+            // Database data from flask route
             var requests = $.get('/data');
 
             var tm = requests.done(function (result)
@@ -139,7 +135,6 @@
                     timezone: 'Europe/Berlin'
             }
             });
-            // -------------- Chart 1 ----------------------------
             chartTemperature = new Highcharts.Chart({
                 chart:
                     {
@@ -174,7 +169,6 @@
         });
 
         // Visual gauge options
-
         var gaugeOptions = {
             chart: {
                 type: 'solidgauge'
@@ -230,7 +224,7 @@
             }
         };
 
-        // Temp gauge
+        // The gauge itself
         var chartTemp = Highcharts.chart('container-temp', Highcharts.merge(gaugeOptions, {
             yAxis: {
                 min: 0,

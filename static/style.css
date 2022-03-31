@@ -1,3 +1,6 @@
+/* Most of the CSS is just to center certain abjects or decide their size. 
+Most of this could be done via either Bootstrap or Highcharts */
+
 .jumbotron{
     widows: 150px;
     height: 150px;
